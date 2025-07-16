@@ -1,20 +1,28 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-
+import { StatusBar } from "expo-status-bar";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import AppText from "./src/components/app-text";
+import AppSaveView from "./src/components/app-save-view";
+import FlashMessage, { showMessage } from "react-native-flash-message";
+import { NavigationContainer } from "@react-navigation/native";
+import MainAppStack from "./src/navigation/MainAppStack";
+import { useFonts } from "expo-font";
 export default function App() {
+  const [fontLoaded] = useFonts({
+    "Nunito-Bold": require("./src/assets/font/Nunito-Bold.ttf"),
+    "Nunito-Regular": require("./src/assets/font/Nunito-Regular.ttf"),
+  });
+  if (!fontLoaded) {
+    return <ActivityIndicator size={"large"} />;
+  }
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <FlashMessage position={"top"} />
+      {/* <SignInPage /> */}
+      <MainAppStack />
+    </NavigationContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+  container: {},
 });
