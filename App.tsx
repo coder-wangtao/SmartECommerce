@@ -6,6 +6,8 @@ import FlashMessage, { showMessage } from "react-native-flash-message";
 import { NavigationContainer } from "@react-navigation/native";
 import MainAppStack from "./src/navigation/MainAppStack";
 import { useFonts } from "expo-font";
+import { Provider } from "react-redux";
+import { store } from "./src/store";
 export default function App() {
   const [fontLoaded] = useFonts({
     "Nunito-Bold": require("./src/assets/font/Nunito-Bold.ttf"),
@@ -15,11 +17,13 @@ export default function App() {
     return <ActivityIndicator size={"large"} />;
   }
   return (
-    <NavigationContainer>
-      <FlashMessage position={"top"} />
-      {/* <SignInPage /> */}
-      <MainAppStack />
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <FlashMessage position={"top"} />
+        {/* <SignInPage /> */}
+        <MainAppStack />
+      </NavigationContainer>
+    </Provider>
   );
 }
 

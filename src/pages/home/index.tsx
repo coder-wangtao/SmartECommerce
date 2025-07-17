@@ -6,8 +6,11 @@ import ProductCard from "../../components/product-card";
 import { FlatList } from "react-native-gesture-handler";
 import { products } from "../../data/product";
 import { s, vs } from "react-native-size-matters";
+import { useDispatch } from "react-redux";
+import { addItemToCart } from "../../store/reducers/cartSlice";
 
 const HomePage = () => {
+  const dispatch = useDispatch();
   return (
     <AppSaveView>
       <HomeHeader />
@@ -20,7 +23,9 @@ const HomePage = () => {
             imageURL={item.imageURL}
             title={item.title}
             price={item.price}
-            onAddToCartPress={() => {}}
+            onAddToCartPress={() => {
+              dispatch(addItemToCart(item));
+            }}
           />
         )}
         columnWrapperStyle={{
