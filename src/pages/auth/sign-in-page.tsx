@@ -9,11 +9,54 @@ import AppTextInput from "../../components/app-text-input";
 import AppText from "../../components/app-text";
 import AppButton from "../../components/app-button";
 import { useNavigation } from "@react-navigation/native";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import AppTextInputController from "../../components/app-text-input-controller";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../config/firebase";
+import { showMessage } from "react-native-flash-message";
+type FormData = yup.InferType<typeof schema>;
+
+const schema = yup.object({
+  email: yup
+    .string()
+    .email("Please enter a valid email")
+    .required("Email is required"),
+  password: yup
+    .string()
+    .required("Password is required")
+    .min(6, "Password number be at least 6 characters"),
+});
 
 const SignInPage = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const navigation = useNavigation();
+
+  const { control, handleSubmit } = useForm<FormData>({
+    resolver: yupResolver(schema),
+  });
+
+  const onLoginPress = async (data: FormData) => {
+    try {
+      // const userCredential = await signInWithEmailAndPassword(
+      //   auth,
+      //   data.email,
+      //   data.password
+      // );
+      navigation.navigate("MainAppBottomTabs");
+    } catch (error: any) {
+      let errorMessage = "";
+      if (error.code === "auth/user-not-found") {
+        errorMessage = "User not found";
+      } else if (error.code === "auth/invalid-credential") {
+        errorMessage = "Wrong Email or Password";
+      } else {
+        errorMessage = "error";
+      }
+      showMessage({ type: "danger", message: errorMessage });
+    }
+  };
+
   return (
     <AppSaveView style={styles.container}>
       <Image
@@ -21,19 +64,20 @@ const SignInPage = () => {
         style={styles.logo}
         resizeMode="contain"
       />
-      <AppTextInput placeholder="Email" onChangeText={setEmail} value={email} />
-      <AppTextInput
+      <AppTextInputController
+        control={control}
+        name="email"
+        placeholder="Email"
+        keyboardType="email-address"
+      />
+      <AppTextInputController
+        control={control}
+        name="password"
         placeholder="Password"
-        onChangeText={setPassword}
-        value={password}
+        secureTextEntry
       />
       <AppText style={styles.appName}>Smart E-Commerce</AppText>
-      <AppButton
-        title="Login"
-        onPress={() => {
-          navigation.navigate("MainAppBottomTabs");
-        }}
-      />
+      <AppButton title="Login" onPress={handleSubmit(onLoginPress)} />
       <AppButton
         title="Sign Up"
         onPress={() => {

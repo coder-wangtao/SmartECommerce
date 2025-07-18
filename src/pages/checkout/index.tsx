@@ -13,12 +13,41 @@ import AppButton from "../../components/app-button";
 import { IS_Android, IS_IOS } from "../../constants";
 import AppTextInputController from "../../components/app-text-input-controller";
 import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useNavigation } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import { emptyCart } from "../../store/reducers/cartSlice";
+
+type FormData = yup.InferType<typeof schema>;
+
+const schema = yup.object({
+  fullName: yup
+    .string()
+    .required("Name is required")
+    .min(3, "Name must be at least 3 characters"),
+  phoneNumber: yup
+    .string()
+    .required("phoneNumber is required")
+    .matches(/^[0-9]+$/, "Must be only digits")
+    .min(10, "Phone number be at least 10 characters"),
+  detailedAddress: yup
+    .string()
+    .required("Address is required")
+    .min(15, "Please provide a detailed address with at least 15 characters"),
+});
 
 const CheckoutPage = () => {
-  const { control, handleSubmit } = useForm({});
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const { control, handleSubmit } = useForm({
+    resolver: yupResolver(schema),
+  });
 
-  const saveOrder = (formData) => {
+  const saveOrder = (formData: FormData) => {
     console.log(formData);
+    navigation.goBack();
+    dispatch(emptyCart());
   };
   return (
     <AppSaveView>
