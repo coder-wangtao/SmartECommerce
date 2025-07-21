@@ -13,9 +13,10 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import AppTextInputController from "../../components/app-text-input-controller";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../config/firebase";
 import { showMessage } from "react-native-flash-message";
+import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
+import { setUserData } from "../../store/reducers/userSlice";
 type FormData = yup.InferType<typeof schema>;
 
 const schema = yup.object({
@@ -31,7 +32,8 @@ const schema = yup.object({
 
 const SignInPage = () => {
   const navigation = useNavigation();
-
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
   const { control, handleSubmit } = useForm<FormData>({
     resolver: yupResolver(schema),
   });
@@ -43,6 +45,10 @@ const SignInPage = () => {
       //   data.email,
       //   data.password
       // );
+      const userDataObj = {
+        uid: "22222",
+      };
+      dispatch(setUserData(userDataObj));
       navigation.navigate("MainAppBottomTabs");
     } catch (error: any) {
       let errorMessage = "";
@@ -67,19 +73,22 @@ const SignInPage = () => {
       <AppTextInputController
         control={control}
         name="email"
-        placeholder="Email"
+        placeholder={t("email")}
         keyboardType="email-address"
       />
       <AppTextInputController
         control={control}
         name="password"
-        placeholder="Password"
+        placeholder={t("password")}
         secureTextEntry
       />
       <AppText style={styles.appName}>Smart E-Commerce</AppText>
-      <AppButton title="Login" onPress={handleSubmit(onLoginPress)} />
       <AppButton
-        title="Sign Up"
+        title={t("signin_button")}
+        onPress={handleSubmit(onLoginPress)}
+      />
+      <AppButton
+        title={t("signup_button")}
         onPress={() => {
           navigation.navigate("SignUpPage");
         }}

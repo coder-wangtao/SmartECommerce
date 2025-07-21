@@ -1,0 +1,12 @@
+{
+  "welcome": "Hello {{userName}}, to Smart...",
+  "common": {
+    "messages": {
+      "welcome": "Hello,User!"
+    }
+  },
+  "signin_button": "Sign In",
+  "signup_button": "Sign Up",
+  "email": "Email",
+  "password": "Password"
+}

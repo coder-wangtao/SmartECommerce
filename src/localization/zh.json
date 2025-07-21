@@ -1,0 +1,12 @@
+{
+  "welcome": "你好 {{userName}}, to 你好...",
+  "common": {
+    "messages": {
+      "welcome": "你好,用户!"
+    }
+  },
+  "signin_button": "登录",
+  "signup_button": "注册",
+  "email": "邮箱",
+  "password": "密码"
+}
